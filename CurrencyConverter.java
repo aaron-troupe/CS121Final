@@ -59,7 +59,10 @@ public class CurrencyConverter {
 
 
     private static void sendHttpGETRequest(String fromCode, String toCode, double amount) throws IOException {
-        String GET_URL = "https://api.exchangerate.host/latest?base=" + fromCode + "&symbols=" + toCode;
+        String GET_URL = "https://v6.exchangerate-api.com/v6/71510a43930e5e26cb2b23bd/pair/" + fromCode + "/" + toCode;
+
+	//debug  System.out.println("Sending request to: " + GET_URL);
+
         URL url = new URL(GET_URL);
         HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
         httpURLConnection.setRequestMethod("GET");
@@ -76,12 +79,22 @@ public class CurrencyConverter {
 
             in.close();
 
+	    //debug   System.out.println("API response: " + response);
+
             JSONObject obj = new JSONObject(response.toString());
-            Double exchangeRate = obj.getJSONObject("rates").getDouble(fromCode);
-            System.out.println(obj.getJSONObject("rates"));
-            System.out.println(exchangeRate);
-            System.out.println();
-            System.out.println(amount + fromCode + " = " + amount / exchangeRate + toCode);
+
+
+	    if (!obj.has("conversion_rate")) {
+		    System.out.println("Error: 'conversion_rate' not found. Full response: " + obj.toString(2));
+		    return;
+	    }
+
+
+            double exchangeRate = obj.getDouble("conversion_rate"); 
+	    double convertedAmount = amount * exchangeRate;
+	    
+	    System.out.println("Conversion rate: " + exchangeRate); 
+	    System.out.printf("%.2f %s = %.2f %s%n", amount, fromCode, convertedAmount, toCode);
         } else {
             System.out.println("GET request failed");
         }
