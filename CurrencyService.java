@@ -3,7 +3,7 @@ import java.net.*;
 import org.json.JSONObject;
 
 public class CurrencyService {
-    private final String apiKey = "71510a43930e5e26cb2b23bd";
+    private final String apiKey = System.getenv("EXCHANGE_API_KEY");
 
     public double getExchangeRate(String fromCode, String toCode) throws IOException {
         String urlStr = "https://v6.exchangerate-api.com/v6/" + apiKey + "/pair/" + fromCode + "/" + toCode;

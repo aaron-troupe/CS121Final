@@ -46,8 +46,8 @@ public class CurrencyConverter {
             System.out.println("1: Yes \t Any other key: No");          
 	    if(sc.nextInt() != 1){
 		    continueConverting = false;
-        }
-        sc.close();
+	    }
+	}
+     	sc.close();
     }
 }
-
